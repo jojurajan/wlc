@@ -233,15 +233,16 @@ class WeblateTest(APITest):
             )
 
 
-class ObjectTestBaseClass:
-    """Base class for objects testing."""
+class ObjectTest(APITest):
+    """
+    Base class for objects testing.
+
+    The reference to it is deleted in the end of this module to avoid discovering
+    it while running tests.
+    """
 
     _name = None
     _cls = None
-
-    def check_object(self, obj):
-        """Perform verification whether object is valid."""
-        raise NotImplementedError()
 
     def get(self):
         """Return remote object."""
@@ -253,6 +254,17 @@ class ObjectTestBaseClass:
         self.assertIsInstance(obj, self._cls)
         self.check_object(obj)
 
+    def check_object(self, obj):
+        """Perform verification whether object is valid."""
+        raise NotImplementedError()
+
+    def test_refresh(self):
+        """Object refreshing test."""
+        obj = self.get()
+        obj.refresh()
+        self.assertIsInstance(obj, self._cls)
+        self.check_object(obj)
+
     def check_list(self, obj):
         """Perform verification whether listing is valid."""
         raise NotImplementedError()
@@ -261,17 +273,6 @@ class ObjectTestBaseClass:
         """Item listing test."""
         obj = self.get()
         self.check_list(obj.list())
-
-
-class ObjectTest(ObjectTestBaseClass, APITest):
-    """Additional tests for projects, components, and translations."""
-
-    def test_refresh(self):
-        """Object refreshing test."""
-        obj = self.get()
-        obj.refresh()
-        self.assertIsInstance(obj, self._cls)
-        self.check_object(obj)
 
     def test_changes(self):
         """Item listing test."""
@@ -520,7 +521,7 @@ class TranslationTest(ObjectTest):
         self.assertEqual(units[0].id, 117)
 
 
-class UnitTest(ObjectTestBaseClass, APITest):
+class UnitTest(ObjectTest):
     _name = "123"
     _cls = Unit
 
@@ -543,5 +544,6 @@ class UnitTest(ObjectTestBaseClass, APITest):
         self.assertEqual(ast.literal_eval(resp.decode()), patch_data)
 
 
+# Delete the reference, so that the abstract class is not discovered
+# when running tests
 del ObjectTest
-del ObjectTestBaseClass
