@@ -809,10 +809,10 @@ class Unit(LazyObject):
         return self
 
     def patch(self, **kwargs):
-        return self.weblate.raw_request("patch", self._url, params=kwargs)
+        return self.weblate.raw_request("patch", self._url, data=kwargs)
 
     def put(self, **kwargs):
-        return self.weblate.raw_request("put", self._url, params=kwargs)
+        return self.weblate.raw_request("put", self._url, data=kwargs)
 
     def delete(self):
         return self.weblate.raw_request("delete", self._url)
