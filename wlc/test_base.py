@@ -73,6 +73,7 @@ class ResponseHandler:
             .replace(" ", "-")
             .replace("[", "-")
             .replace("]", "-")
+            .replace("*", "-")
         )
         return body
 
