@@ -18,15 +18,15 @@
 #
 """Weblate API client library."""
 
+import json
+import logging
 from copy import copy
 
 import dateutil.parser
 import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
-import json
-import logging
-from six.moves.urllib.parse import urlparse, urlencode
+from six.moves.urllib.parse import urlencode, urlparse
 
 log = logging.getLogger("wlc")
 
@@ -328,9 +328,9 @@ class Weblate:
         required_keys = ["name", "slug", "file_format", "filemask", "repo"]
         for key in required_keys:
             if key not in kwargs:
-                raise WeblateException("{} is required.".format(key))
+                raise WeblateException(f"{key} is required.")
 
-        return self.post("projects/{}/components/".format(project), **kwargs)
+        return self.post(f"projects/{project}/components/", **kwargs)
 
     def create_language(self, code, name, direction="ltr", plural=None):
         """Create a new language."""
