@@ -536,9 +536,7 @@ class UnitTest(ObjectTestBaseClass, APITest):
     def test_units_patch(self):
         obj = self.get()
         patch_data = {
-            "target": [
-                "foo",
-            ],
+            "target": ["foo"],
             "state": 30,
         }
         resp = obj.patch(**patch_data)
