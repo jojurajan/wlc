@@ -17,6 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 """Test the module."""
+import ast
 import io
 
 from requests.exceptions import RequestException
@@ -263,7 +264,7 @@ class ObjectTestBaseClass:
 
 
 class ObjectTest(ObjectTestBaseClass, APITest):
-    """Additional tests for projects, components, and translations"""
+    """Additional tests for projects, components, and translations."""
 
     def test_refresh(self):
         """Object refreshing test."""
@@ -532,14 +533,16 @@ class UnitTest(ObjectTestBaseClass, APITest):
         self.assertIsInstance(obj, Unit)
 
     # TODO: Responses isn't playing nicely with "PATCH" method
-    # def test_units_patch(self):
-    #     obj = self.get()
-    #     patch_data = {
-    #         "target": ["foo",],
-    #         "state": 30
-    #     }
-    #     resp = obj.patch(**patch_data)
-    #     self.assertEqual(resp, patch_data)
+    def test_units_patch(self):
+        obj = self.get()
+        patch_data = {
+            "target": [
+                "foo",
+            ],
+            "state": 30,
+        }
+        resp = obj.patch(**patch_data)
+        self.assertEqual(ast.literal_eval(resp.decode()), patch_data)
 
 
 del ObjectTest
